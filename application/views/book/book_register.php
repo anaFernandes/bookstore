@@ -57,6 +57,8 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-8">
+          <label for="nome">Imagem</label>
+          <input type="file" class="form-control" id="file" name="file" value="" placeholder="" style="height:50px">
         </div>
         <div class="col-md-4">
           <div class="form-group">
