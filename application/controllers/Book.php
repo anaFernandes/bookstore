@@ -233,6 +233,23 @@ class Book extends CI_Controller {
 				$authorBook->saveInsert();
 			}
 
+			// $img1 = $_POST['THUMBZZZ'];
+			// if($img1 != NULL){
+			// Image_model::insert($img, $ISBN);
+			// Image_model::upload();
+			// }
+			//
+			// $img2 = $_POST['MZZZZZZZ'];
+			// if($img2 != NULL){
+			// Image_model::insert($img3, $ISBN);
+			// Image_model::upload(??);
+			// }
+			//
+			// $img3 = $_POST['LZZZZZZZ'];
+			// if($img3 != NULL){
+			// Image_model::insert($img3, $ISBN);
+			// Image_model::upload(??);
+			// }
 			$book->saveInsert();
 			redirect(base_url('book'));
 		}
