@@ -1,4 +1,5 @@
 <?php
+class Customer_model extends CI_Model {
     public $id;
     public $fname;
     public $email;

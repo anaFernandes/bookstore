@@ -86,6 +86,4 @@ class book_model extends CI_Model {
         $results = $CI->db->get('bookdescriptions')->result();
         return $results;
       }
-
-
   }
