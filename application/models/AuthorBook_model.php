@@ -8,8 +8,9 @@ class AuthorBook_model extends CI_Model {
     $this->load->database();
     if ($ISBN) {
       $this->db->where('ISBN', $ISBN);
-      $result = $this->db->get('bookauthorsbooksbooks')->result()[0];
+      $result = $this->db->get('bookauthorsbooks')->result()[0];
       $this->ISBN  = $result->ISBN;
+      $this->AuthorID  = $result->AuthorID;
     }
   }
 
@@ -35,20 +36,24 @@ public static function get_from_author($AuthorID) {
   }
 }
 
-      // $this->db->insert('bookauthorsbooks', $this);
-
   public static function delete ($ISBN) {
     $CI = & get_instance();
     $CI->db->where('ISBN', $ISBN);
     $CI->db->delete('bookauthorsbooks');
   }
 
-  public static function get_from_id($ISBN) {
+  public static function delete_from_author ($AuthorID) {
+    $CI = & get_instance();
+    $CI->db->where('AuthorID', $AuthorID);
+    $CI->db->delete('bookauthorsbooks');
+  }
+
+  public static function get_from_isbn($ISBN) {
     $CI =& get_instance();
     $CI->db->where('ISBN', $ISBN);
     $result = $CI->db->get('bookauthorsbooks')->result();
     if(count($result) > 0) {
-      return new Author_model($result[0]->ISBN);
+      return new AuthorBook_model($result[0]->ISBN);
     } else {
       return false;
     }

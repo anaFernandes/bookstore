@@ -29,22 +29,10 @@ class Author_model extends CI_Model {
     }
   }
 
-  public static function get_from_author($AuthorID) {
-    $CI =& get_instance();
-    $CI->db->where('AuthorID', $AuthorID);
-    $result = $CI->db->get('bookauthors')->result();
-    if(count($result) > 0) {
-      return new Author_model($result[0]->$AuthorID);
-    } else {
-      return false;
-    }
-  }
-
   public function delete () {
     $this->db->delete('bookauthors', array('AuthorID' => $this->AuthorID));
   }
-
-
+  
   public static function get_from_id($AuthorID) {
     $CI =& get_instance();
     $CI->db->where('AuthorID', $AuthorID);

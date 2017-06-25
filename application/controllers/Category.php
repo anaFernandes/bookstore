@@ -30,6 +30,7 @@ class Category extends CI_Controller {
 
 		public function del($CategoryID){
 			$category = new Category_model($CategoryID);
+			CategoryBook_model::delete_from_category($CategoryID);
 			$category->delete();
 			redirect(base_url('category'));
 		}

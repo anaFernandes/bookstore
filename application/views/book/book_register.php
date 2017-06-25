@@ -57,8 +57,6 @@
     <div class="row">
       <div class="col-md-12">
         <div class="col-md-8">
-          <label for="nome">Imagem</label>
-          <input type="file" class="form-control" id="file" name="file" value="" placeholder="" style="height:50px">
         </div>
         <div class="col-md-4">
           <div class="form-group">
@@ -76,6 +74,23 @@
             <label for="nome">Descrição</label>
             <textarea name="description" id="description" class="form-control" style="min-height:200px"></textarea>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12" style="margin-bottom:20px; padding:20px">
+        <div class="col-md-4">
+          <label for="nome">Imagem pequena</label>
+          <input type="file" class="form-control" id="file" name="Small_File" value="" placeholder="" style="height:50px;border:none">
+        </div>
+        <div class="col-md-4">
+          <label for="nome">Imagem média</label>
+          <input type="file" class="form-control" id="file" name="Medium_File" value="" placeholder="" style="height:50px;border:none">
+        </div>
+        <div class="col-md-4">
+          <label for="nome">Imagem grande</label>
+          <input type="file" class="form-control" id="file" name="Big_File" value="" placeholder="" style="height:50px;border:none">
         </div>
       </div>
     </div>

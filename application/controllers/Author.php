@@ -71,6 +71,7 @@ class Author extends CI_Controller {
 
 		public function del($AuthorID){
 			$author = new Author_model($AuthorID);
+			AuthorBook_model::delete_from_author($AuthorID);
 			$author->delete();
 			redirect(base_url('author'));
 		}

@@ -28,13 +28,13 @@ class book_model extends CI_Model {
 
       public function saveUpdate () {
           $data = $this->db->query('UPDATE bookdescriptions SET title="'.$this->title.'",
-                                               description="'.$this->description.'" ,
-                                               price="'.$this->price.'",
-                                               publisher="'.$this->publisher.'",
-                                               edition="'.$this->edition.'",
+                                              description="'.$this->description.'" ,
+                                              price="'.$this->price.'",
+                                              publisher="'.$this->publisher.'",
+                                              edition="'.$this->edition.'",
                                               pubdate="'.$this->pubdate.'",
-                                               pages="'.$this->pages.'"
-                                               WHERE ISBN="'.$this->ISBN.'"');
+                                              pages="'.$this->pages.'"
+                                              WHERE ISBN="'.$this->ISBN.'"');
                                             }
       public function saveInsert () {
             $this->db->insert('bookdescriptions', $this);

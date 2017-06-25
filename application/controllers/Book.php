@@ -3,7 +3,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Book extends CI_Controller {
 		public function index() {
-
 			$data['books'] = $this->load_books();
 			$data['user_type'] = $this->verify_role();
 			if($data['user_type'] == 1) {
@@ -14,9 +13,40 @@ class Book extends CI_Controller {
 			$this->build_static_info();
 			$data = $this->change_book_description($data);
 		 	$this->load->view('book/book_list', $data);
+			$this->build_static_footer();
+		}
+
+		public function show_book($ISBN) {
+
+			$data['book'] = book_model::get_from_id($ISBN);
+			$data['book_authors'] = AuthorBook_model::get_from_isbn($ISBN);
+			$data['book_categories'] = CategoryBook_model::get_from_isbn($ISBN);
+
+			if(sizeof($data['book_authors']) > 1) {
+				foreach ($data['book_authors'] as $authors) {
+					$data['authors'] = Author_model::get_from_id($authors->AuthorID);
+				}
+			} else {
+				$data['authors'] = Author_model::get_from_id($data['book_authors']->AuthorID);
+			}
+
+			if(sizeof($data['book_categories']) > 1) {
+				foreach ($data['book_categories'] as $categories) {
+					$data['categories'] = category_model::get_from_id($categories->CategoryID);
+				}
+			} else {
+				$data['categories'] = Author_model::get_from_id($data['book_categories']->CategoryID);
+			}
+
+			$data['user_type'] = $this->verify_role();
+			$data['h1'] = $data['book']->title;
+
+			$this->build_static_info();
+		 	$this->load->view('book/book_description', $data);
 
 			$this->build_static_footer();
 		}
+
 
 		public function change_book_description($data) {
 			if(count($data)) {
@@ -95,10 +125,10 @@ class Book extends CI_Controller {
 		}
 
 
-		public function edit($id) {
+		public function edit($ISBN) {
 			$this->build_static_info();
 
-			$book = book_model::get_from_id($id);
+			$book = book_model::get_from_id($ISBN);
 			$data['book'] = $book;
 			$authors = author_model::get_all();
 			$data['authors'] = $authors;
@@ -119,10 +149,10 @@ class Book extends CI_Controller {
 
 			$book->ISBN = $_POST['ISBN'];
 
-			$book->title = $_POST['title'];
-			$book->description = $_POST['description'];
+			$book->title = $this->clean_str($_POST['title']);
+			$book->description = $this->clean_str($_POST['description']);
 			$book->price = $_POST['price'];
-			$book->publisher = $_POST['publisher'];
+			$book->publisher = $this->clean_str($_POST['publisher']);
 			$book->pubdate = $_POST['pubdate'];
 			$book->edition = $_POST['edition'];
 			$book->pages = $_POST['pages'];
@@ -170,14 +200,17 @@ class Book extends CI_Controller {
 			return book_model::get_all();
 		}
 
+		public function clean_str($string) {
+			return htmlspecialchars( $string, ENT_QUOTES, "UTF-8");
+		}
+
 		public function saveInsert() {
 			$book = new book_model();
-
 			$book->ISBN = $_POST['ISBN'];
-			$book->title = $_POST['title'];
-			$book->description = $_POST['description'];
+			$book->title = $this->clean_str($_POST['title']);
+			$book->description = $this->clean_str($_POST['description']);
 			$book->price = $_POST['price'];
-			$book->publisher = $_POST['publisher'];
+			$book->publisher = $this->clean_str($_POST['publisher']);
 			$book->pubdate = $_POST['pubdate'];
 			$book->edition = $_POST['edition'];
 			$book->pages = $_POST['pages'];

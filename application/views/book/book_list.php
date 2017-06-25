@@ -39,7 +39,7 @@
               <?php if($book_counter == 0) :?>
                 <div class="col-md-12" style="padding:30px!important">
               <?php endif ?>
-                  <div class="col-md-3">
+                  <div class="col-md-3"  style="padding:20px!important;">
                     <div class="card">
                       <img class="card-img-top" src="http://via.placeholder.com/250x150" alt="Card image cap" width="100%">
                       <div class="card-block" style="height:160px!important">
@@ -50,16 +50,28 @@
                     <?php if($user_type == 1) : ?>
                       <a href="<?php echo base_url('book/edit/'.$book->ISBN)  ?>" class="btn btn-primary btn-block">Alterar Livro</a>
                     <?php else : ?>
-                      <a href="<?php echo base_url('book')?>" class="btn btn-primary btn-block">Ver detalhes</a>
+                      <a href="<?php echo base_url('book/show_book/'.$book->ISBN)?>" class="btn btn-primary btn-block">Ver detalhes</a>
                     <?php endif ?>
                   </div>
-              <?php
-              $book_counter++;
-              if($book_counter == 4) : ?>
-                <?php  $book_counter = 0 ?>
+              <?php $book_counter++; if($book_counter == 4) : ?>
+                  <?php  $book_counter = 0 ?>
                 </div>
               <?php endif?>
-
+              <?php if($book === end($books)) : ?>
+                  <div class="col-md-3 box-shadow-add"  style="padding:20px; -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36);
+                                                               -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36);
+                                                               box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36); background-color:#eee;
+                                                               border-radius:20px">
+                    <div class="card" style="boder 1px solid blue;">
+                      <img class="card-img-top img-rounded" src="http://via.placeholder.com/250x150" alt="Card image cap" width="100%">
+                      <div class="card-block" style="height:160px!important">
+                        <span class="card-title" style="padding:5px"><b>Adicionar novo livro </b></span>
+                        <p class="card-text"></p>
+                      </div>
+                    </div>
+                  <a href="<?php echo base_url('book/register/')?>" class="btn btn-primary btn-block" style="background:#18bc9c; border:solid 2px #18bc9c">Adicionar livro</a>
+                </div>
+              <?php endif?>
             <?php endforeach ?>
           <?php endif ?>
       </div>

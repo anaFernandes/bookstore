@@ -34,13 +34,19 @@ class CategoryBook_model extends CI_Model {
     }
   }
 
+  public static function delete_from_category ($CategoryID) {
+    $CI = & get_instance();
+    $CI->db->where('CategoryID', $CategoryID);
+    $CI->db->delete('bookcategoriesbooks');
+  }
+
   public static function delete ($ISBN) {
     $CI = & get_instance();
     $CI->db->where('ISBN', $ISBN);
     $CI->db->delete('bookcategoriesbooks');
   }
 
-  public static function get_from_id($ISBN) {
+  public static function get_from_isbn($ISBN) {
     $CI =& get_instance();
     $CI->db->where('ISBN', $ISBN);
     $result = $CI->db->get('bookcategoriesbooks')->result();
