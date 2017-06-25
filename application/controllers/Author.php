@@ -3,86 +3,91 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Author extends CI_Controller {
 	public function index() {
+		$this->build_static_info();
 		$data['authors'] = $this->load_authors();
-		// $header = $this->define_header();
-		// $this->load->view($header);
-		// if($this->define_access())
-			$this->load->view('author/author_list',$data);
-		// else
-		// 	$this->load->view('layout/no-access');
+		$data['user_type'] = $this->verify_role();
+		$data['h1'] = "Autores";
 
-		// $this->load->view('layout/footer');
+		if($data['user_type'] != 1) {
+				$this->load->view('acesso-negado',$data);
+		} else {
+				$this->load->view('author/author_list',$data);
+		}
+		$this->build_static_footer();
 	}
 
 	public function register() {
-		// $header = $this->define_header();
-		// $this->load->view($header);
-		// if($this->define_access())
-			$this->load->view('author/author_register');
-		// else
-		// 	$this->load->view('layout/no-access');
-		// $this->load->view('layout/footer');
+			$this->build_static_info();
+			$permission = $this->verify_role();
+			if($permission != 1) {
+				$this->load->view('acesso-negado');
+			} else {
+				$this->load->view('author/author_register');
+			}
+	}
+
+	public function verify_role() {
+		return 1;
+	}
+
+	public function build_static_info() {
+		$header_data['categories'] = category_model::get_all();
+		$header_data['active'] = 'authors';
+		if($this->verify_role() == 1) {
+				$header_url = 'layout/admin-header';
+				$this->load->view($header_url, $header_data);
+		} else {
+				$header_url = 'layout/header';
+				$this->load->view($header_url, $header_data);
+		}
+	}
+
+	public function build_static_footer() {
+		$this->load->view('layout/footer');
 	}
 
 
 	public function edit($AuthorID) {
 		$author = Author_model::get_from_id($AuthorID);
-		$data['author'] = $author;
-		// $header = $this->define_header();
-		// $this->load->view($header);
-		// if($this->define_access())
+		$this->build_static_info();
+		$permission = $this->verify_role();
+		if($permission != 1) {
+			$this->load->view('acesso-negado');
+		} else {
+			$data['author'] = $author;
 			$this->load->view('author/author_edit', $data);
-		// else
-		// 	$this->load->view('layout/no-access');
-		// $this->load->view('layout/footer');
+		}
+
 	}
 
-	// private function define_access() {
-	// 	if($_SESSION['role'] == 2 )
-	// 		return true;
-	// 	return false;
-	// }
+		public function update($AuthorID) {
+			$author = new Author_model($AuthorID);
+			$author->nameF = $_POST['nameF'];
+			$author->nameL = $_POST['nameL'];
+			$author->save();
 
-	// private function define_header() {
-	// 	$header_url = '';
-	// 	if($_SESSION['role'] == 2) {
-	// 		$header_url = 'layout/header-adm';
-	// 	} else if($_SESSION['role'] == 1) {
-	// 		$header_url = 'layout/header-tea';
-	// 	} else {
-	// 		$header_url = 'layout/header-std';
-	// 	}
-	// 	return $header_url;
-	// }
+			redirect(base_url('author'));
+		}
 
-	public function update($AuthorID) {
-		$author = new Author_model($AuthorID);
-		$author->nameF = $_POST['nameF'];
-		$author->nameL = $_POST['nameL'];
-		$author->save();
-
-		redirect(base_url('author'));
-	}
-
-	public function del($AuthorID){
-		$author = new Author_model($AuthorID);
-		$author->delete();
-		redirect(base_url('author'));
-	}
+		public function del($AuthorID){
+			$author = new Author_model($AuthorID);
+			$author->delete();
+			redirect(base_url('author'));
+		}
 
 
 	// private function load_authors() {
-	public function Load_authors(){
-		return Author_model::get_all();
-	}
+		public function Load_authors(){
+			return Author_model::get_all();
+		}
 
-	public function save() {
-		$author = new Author_model();
-		$author->nameL = $_POST['nameL'];
-		$author->nameF = $_POST['nameF'];
-		$author->save();
-		redirect(base_url('author'));
-	}
+		public function save() {
+			$author = new Author_model();
+			$author->nameL = $_POST['nameL'];
+			$author->nameF = $_POST['nameF'];
+			$author->save();
+			redirect(base_url('author'));
+		}
 	}
 
 // 	public function Index()

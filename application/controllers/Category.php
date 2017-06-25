@@ -6,24 +6,11 @@ class Category extends CI_Controller {
 		public function index() {
 			$this->load->model('category_model');
 			$data['categories'] = $this->load_categories();
-			// $header = $this->define_header();
-			// $this->load->view($header);
-			// if($this->define_access())
-				$this->load->view('category/category_list',$data);
-			// else
-			// 	$this->load->view('layout/no-access');
-
-			// $this->load->view('layout/footer');
+			$this->load->view('category/category_list',$data);
 		}
 
 		public function register() {
-			// $header = $this->define_header();
-			// $this->load->view($header);
-			// if($this->define_access())
 				$this->load->view('category/category_register');
-			// else
-			// 	$this->load->view('layout/no-access');
-			// $this->load->view('layout/footer');
 		}
 
 
@@ -31,39 +18,14 @@ class Category extends CI_Controller {
 			$this->load->model('category_model');
 			$category = Category_model::get_from_id($CategoryID);
 			$data['category'] = $category;
-			// $header = $this->define_header();
-			// $this->load->view($header);
-			// if($this->define_access())
 				$this->load->view('category/category_edit', $data);
-			// else
-			// 	$this->load->view('layout/no-access');
-			// $this->load->view('layout/footer');
 		}
 
-		// private function define_access() {
-		// 	if($_SESSION['role'] == 2 )
-		// 		return true;
-		// 	return false;
-		// }
-
-		// private function define_header() {
-		// 	$header_url = '';
-		// 	if($_SESSION['role'] == 2) {
-		// 		$header_url = 'layout/header-adm';
-		// 	} else if($_SESSION['role'] == 1) {
-		// 		$header_url = 'layout/header-tea';
-		// 	} else {
-		// 		$header_url = 'layout/header-std';
-		// 	}
-		// 	return $header_url;
-		// }
-
 		public function update($CategoryID) {
-			$category = new Category_model($CategoryID);
-			$category->CategoryName = $_POST['CategoryName'];
-			$category->save();
-
-			redirect(base_url('category'));
+				$category = new Category_model($CategoryID);
+				$category->CategoryName = $_POST['CategoryName'];
+				$category->save();
+				redirect(base_url('category'));
 		}
 
 		public function del($CategoryID){
@@ -72,8 +34,6 @@ class Category extends CI_Controller {
 			redirect(base_url('category'));
 		}
 
-
-		// private function load_categories() {
 		public function Load_categories(){
 			return Category_model::get_all();
 		}

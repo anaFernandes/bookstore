@@ -15,25 +15,24 @@ class CategoryBook_model extends CI_Model {
   }
 
   public function saveUpdate () {
-      $this->db->query("UPDATE bookcategoriesbooks SET CategoryID='".$this->CategoryID."'
+    $this->db->query("UPDATE bookcategoriesbooks SET CategoryID='".$this->CategoryID."'
                                           WHERE ISBN=".$this->ISBN);
-    }
+  }
 
   public function saveInsert(){
-    //INsert into
-          $this->db->insert('bookcategoriesbooks', $this);
-}
+    $this->db->insert('bookcategoriesbooks', $this);
+  }
 
-      public static function get_from_category($CategoryID) {
-        $CI =& get_instance();
-        $CI->db->where('CategoryID', $CategoryID);
-        $result = $CI->db->get('bookcategoriesbooks')->result();
-        if(count($result) > 0) {
-          return new CategoryBook_model($result[0]->CategoryID);
-        } else {
-          return false;
-        }
-      }
+  public static function get_from_category($CategoryID) {
+    $CI =& get_instance();
+    $CI->db->where('CategoryID', $CategoryID);
+    $result = $CI->db->get('bookcategoriesbooks')->result();
+    if(count($result) > 0) {
+      return $result;
+    } else {
+      return false;
+    }
+  }
 
   public static function delete ($ISBN) {
     $CI = & get_instance();

@@ -2,99 +2,187 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Book extends CI_Controller {
-	public function index() {
-		$data['books'] = $this->load_books();
-		// $header = $this->define_header();
-		// $this->load->view($header);
+		public function index() {
 
-		// if($this->define_access())
-		 	$this->load->view('book/book_list',$data);
-		// else
-		// 	$this->load->view('layout/no-access');
-		//
-		// $this->load->view('layout/footer');
-	}
+			$data['books'] = $this->load_books();
+			$data['user_type'] = $this->verify_role();
+			if($data['user_type'] == 1) {
+				$data['h1'] = "Livros";
+			} else {
+				$data['h1'] = "Produtos";
+			}
+			$this->build_static_info();
+			$data = $this->change_book_description($data);
+		 	$this->load->view('book/book_list', $data);
 
-	public function register() {
-		// $header = $this->define_header();
-		// $this->load->view($header);
-		// if($this->define_access())
-		$authors = author_model::get_all();
-		$data['authors'] = $authors;
-		$categories = category_model::get_all();
-		$data['categories'] = $categories;
-		$this->load->view('book/book_register', $data);
-		// else
-		// 	$this->load->view('layout/no-access');
-		// $this->load->view('layout/footer');
-	}
-
-
-	public function edit($id) {
-		$book = book_model::get_from_id($id);
-		$data['book'] = $book;
-		$authors = author_model::get_all();
-		$data['authors'] = $authors;
-		$categories = category_model::get_all();
-		$data['categories'] = $categories;
-		// $header = $this->define_header();
-		// $this->load->view($header);
-		// if($this->define_access())
-			$this->load->view('book/book_edit', $data);
-		// else
-		// 	$this->load->view('layout/no-access');
-		// $this->load->view('layout/footer');
-	}
-
-	private function define_access() {
-		if($_SESSION['role'] == 2 )
-			return true;
-		return false;
-	}
-
-	private function define_header() {
-		$header_url = '';
-		if($_SESSION['role'] == 2) {
-			$header_url = 'layout/header-adm';
-		} else if($_SESSION['role'] == 1) {
-			$header_url = 'layout/header-tea';
-		} else {
-			$header_url = 'layout/header-std';
+			$this->build_static_footer();
 		}
-		return $header_url;
-	}
-	public function update($ISBN) {
-		// $this->output->enable_profiler(TRUE);
-		$book = new book_model($ISBN);
 
-		$book->ISBN = $_POST['ISBN'];
-		$book->title = $_POST['title'];
-		$book->description = $_POST['description'];
-		$book->price = $_POST['price'];
-		$book->publisher = $_POST['publisher'];
-		$book->pubdate = $_POST['pubdate'];
-		$book->edition = $_POST['edition'];
-		$book->pages = $_POST['pages'];
+		public function change_book_description($data) {
+			if(count($data)) {
+				foreach ($data['books'] as $book) {
+					$new_description = implode(' ', array_slice(explode(' ', $book->description), 0, 10));
+					$book->description = $new_description;
+				}
+			}
+			return $data;
+		}
 
-		$book->saveUpdate();
+		public function verify_role() {
+			return 1;
+		}
 
-		$authorsID = $this->input->post('authors');
-
-		if($authorsID != NULL){
-			AuthorBook_model::delete($ISBN);
-
-			foreach ($authorsID as $key => $AuthorID) {
-				$authorBook = new AuthorBook_model();
-				$authorBook->ISBN = $book->ISBN;
-				$authorBook->AuthorID = $AuthorID;
-				$authorBook->saveInsert();
+		public function build_static_info() {
+			$header_data['categories'] = category_model::get_all();
+			$header_data['active'] = 'books';
+			if($this->verify_role() == 1) {
+					$header_url = 'layout/admin-header';
+					$this->load->view($header_url, $header_data);
+			} else {
+					$header_url = 'layout/header';
+					$this->load->view($header_url, $header_data);
 			}
 		}
 
-		$categoriesID = $this->input->post('categories');
+		public function build_static_footer() {
+			$this->load->view('layout/footer');
+		}
 
-		if($categoriesID != NULL){
+		public function searchFromUrl($search_string) {
+			$data['books_from_categories'] = CategoryBook_model::get_from_category($search_string);
+			$category = category_model::get_from_id($search_string);
+			$data['books'] = [];
+			$data['user_type'] = $this->verify_role();
+			$data['h1'] = 'Livros da categoria : '.$category->CategoryName;
+			if($data['books_from_categories']) {
+				foreach ($data['books_from_categories'] as $book) {
+					$book = Book_model::get_from_id($book->ISBN);
+					array_push($data['books'], $book);
+				}
+			}
+			$this->build_static_info();
+			$data = $this->change_book_description($data);
+			$this->load->view('book/book_list', $data);
+			$this->build_static_footer();
+		}
+
+		public function searchAll() {
+			$data['user_type'] = $this->verify_role();
+			$data['h1'] = "Busca feita : ".$_POST['SearchString'];
+			$data['books'] = Book_model::search_all_columns($_POST['SearchString']);
+			$header_data['categories'] = category_model::get_all();
+			$header_url = 'layout/header';
+
+			$this->change_book_description($data);
+
+			$this->load->view($header_url, $header_data);
+		 	$this->load->view('book/book_list', $data);
+			$this->load->view('layout/footer');
+		}
+
+		public function register() {
+			$this->build_static_info();
+			$authors = author_model::get_all();
+			$data['authors'] = $authors;
+			$categories = category_model::get_all();
+			$data['categories'] = $categories;
+			if($this->verify_role() == 1) {
+					$this->load->view('book/book_register', $data);
+			} else {
+					$this->load->view('acesso-negado');
+			}
+			$this->build_static_footer();
+		}
+
+
+		public function edit($id) {
+			$this->build_static_info();
+
+			$book = book_model::get_from_id($id);
+			$data['book'] = $book;
+			$authors = author_model::get_all();
+			$data['authors'] = $authors;
+			$categories = category_model::get_all();
+			$data['categories'] = $categories;
+
+			if($this->verify_role() == 1) {
+					$this->load->view('book/book_edit', $data);
+			} else {
+					$this->load->view('acesso-negado');
+			}
+
+			$this->build_static_footer();
+		}
+
+		public function update($ISBN) {
+			$book = new book_model($ISBN);
+
+			$book->ISBN = $_POST['ISBN'];
+
+			$book->title = $_POST['title'];
+			$book->description = $_POST['description'];
+			$book->price = $_POST['price'];
+			$book->publisher = $_POST['publisher'];
+			$book->pubdate = $_POST['pubdate'];
+			$book->edition = $_POST['edition'];
+			$book->pages = $_POST['pages'];
+
+			$book->saveUpdate();
+
+			$authorsID = $this->input->post('authors');
+
+			if($authorsID != NULL){
+				AuthorBook_model::delete($ISBN);
+
+				foreach ($authorsID as $key => $AuthorID) {
+					$authorBook = new AuthorBook_model();
+					$authorBook->ISBN = $book->ISBN;
+					$authorBook->AuthorID = $AuthorID;
+					$authorBook->saveInsert();
+				}
+			}
+
+			$categoriesID = $this->input->post('categories');
+
+			if($categoriesID != NULL){
+				CategoryBook_model::delete($ISBN);
+
+				foreach ($categoriesID as $key => $CategoryID) {
+					$categoryBook = new CategoryBook_model();
+					$categoryBook->ISBN = $book->ISBN;
+					$categoryBook->CategoryID = $CategoryID;
+					$categoryBook->saveInsert();
+				}
+			}
+			redirect(base_url('book'));
+		}
+
+		public function del($ISBN){
+			$book = new book_model($ISBN);
+			AuthorBook_model::delete($ISBN);
 			CategoryBook_model::delete($ISBN);
+			$book->delete();
+			redirect(base_url('book'));
+		}
+
+
+		public function load_books() {
+			return book_model::get_all();
+		}
+
+		public function saveInsert() {
+			$book = new book_model();
+
+			$book->ISBN = $_POST['ISBN'];
+			$book->title = $_POST['title'];
+			$book->description = $_POST['description'];
+			$book->price = $_POST['price'];
+			$book->publisher = $_POST['publisher'];
+			$book->pubdate = $_POST['pubdate'];
+			$book->edition = $_POST['edition'];
+			$book->pages = $_POST['pages'];
+
+			$categoriesID = $this->input->post('categories');
 
 			foreach ($categoriesID as $key => $CategoryID) {
 				$categoryBook = new CategoryBook_model();
@@ -102,56 +190,19 @@ class Book extends CI_Controller {
 				$categoryBook->CategoryID = $CategoryID;
 				$categoryBook->saveInsert();
 			}
+
+			$data = $this->input->post('authors');
+
+			foreach ($data as $key => $AuthorID) {
+				$authorBook = new AuthorBook_model();
+				$authorBook->ISBN = $book->ISBN;
+				$authorBook->AuthorID = $AuthorID;
+				$authorBook->saveInsert();
+			}
+
+			$book->saveInsert();
+			redirect(base_url('book'));
 		}
-		redirect(base_url('book'));
-	}
-
-	public function del($ISBN){
-		$book = new book_model($ISBN);
-		AuthorBook_model::delete($ISBN);
-		CategoryBook_model::delete($ISBN);
-		$book->delete();
-		redirect(base_url('book'));
-	}
-
-
-	public function load_books() {
-		return book_model::get_all();
-	}
-
-	public function saveInsert() {
-		$book = new book_model();
-		$book->ISBN = $_POST['ISBN'];
-		$book->title = $_POST['title'];
-		$book->description = $_POST['description'];
-		$book->price = $_POST['price'];
-		$book->publisher = $_POST['publisher'];
-		$book->pubdate = $_POST['pubdate'];
-		$book->edition = $_POST['edition'];
-		$book->pages = $_POST['pages'];
-
-		$categoriesID = $this->input->post('categories');
-
-		foreach ($categoriesID as $key => $CategoryID) {
-			$categoryBook = new CategoryBook_model();
-			$categoryBook->ISBN = $book->ISBN;
-			$categoryBook->CategoryID = $CategoryID;
-			$categoryBook->saveInsert();
-		}
-
-		$data = $this->input->post('authors');
-
-		foreach ($data as $key => $AuthorID) {
-			$authorBook = new AuthorBook_model();
-			$authorBook->ISBN = $book->ISBN;
-			$authorBook->AuthorID = $AuthorID;
-			$authorBook->saveInsert();
-		}
-
-		$book->saveInsert();
-		redirect(base_url('book'));
-
-	}
 }
 
 	// public function index()
