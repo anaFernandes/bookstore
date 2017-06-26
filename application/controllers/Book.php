@@ -59,7 +59,7 @@ class Book extends CI_Controller {
 		}
 
 		public function verify_role() {
-			return 1;
+			return 0;
 		}
 
 		public function build_static_info() {
