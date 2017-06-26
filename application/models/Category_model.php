@@ -16,7 +16,6 @@ class Category_model extends CI_Model {
   }
 
   public function save () {
-    var_dump($data);
     if ( isset($this->CategoryID) ) {
       $data = $this->db->query("UPDATE bookcategories SET CategoryName='".$this->CategoryName."'
                                           WHERE CategoryID=".$this->CategoryID);

@@ -184,6 +184,13 @@ class Book extends CI_Controller {
 					$categoryBook->saveInsert();
 				}
 			}
+
+			$img1 = $_POST['Small_File'];
+			$img2 = $_POST['Medium_File'];
+			$img3 = $_POST['Large_File'];
+
+			self::InsertImg($book, $img1, $img2, $img3);
+
 			redirect(base_url('book'));
 		}
 
@@ -191,6 +198,7 @@ class Book extends CI_Controller {
 			$book = new book_model($ISBN);
 			AuthorBook_model::delete($ISBN);
 			CategoryBook_model::delete($ISBN);
+			Image_model::deleteISBN($ISBN);
 			$book->delete();
 			redirect(base_url('book'));
 		}
@@ -206,15 +214,43 @@ class Book extends CI_Controller {
 
 		public function saveInsert() {
 			$book = new book_model();
+
 			$book->ISBN = $_POST['ISBN'];
 			$book->title = $this->clean_str($_POST['title']);
 			$book->description = $this->clean_str($_POST['description']);
 			$book->price = $_POST['price'];
-			$book->publisher = $this->clean_str($_POST['publisher']);
+			$book->publisher = $_POST['publisher'];
 			$book->pubdate = $_POST['pubdate'];
 			$book->edition = $_POST['edition'];
 			$book->pages = $_POST['pages'];
 
+			$book->saveInsert();
+
+			$img1 = $_POST['Small_File'];
+			$img2 = $_POST['Medium_File'];
+			$img3 = $_POST['Large_File'];
+
+			
+
+			self::InsertImg($book, $img1, $img2, $img3);
+			self::InsertAuthorsBook($book);
+			self::InsertCategoryBook($book);
+
+			redirect(base_url('book'));
+		}
+
+		private function InsertAuthorsBook($book){
+			$data = $this->input->post('authors');
+
+			foreach ($data as $key => $AuthorID) {
+				$authorBook = new AuthorBook_model();
+				$authorBook->ISBN = $book->ISBN;
+				$authorBook->AuthorID = $AuthorID;
+				$authorBook->saveInsert();
+				}
+		}
+
+		private function InsertCategoryBook($book){
 			$categoriesID = $this->input->post('categories');
 
 			foreach ($categoriesID as $key => $CategoryID) {
@@ -224,36 +260,71 @@ class Book extends CI_Controller {
 				$categoryBook->saveInsert();
 			}
 
-			$data = $this->input->post('authors');
-
-			foreach ($data as $key => $AuthorID) {
-				$authorBook = new AuthorBook_model();
-				$authorBook->ISBN = $book->ISBN;
-				$authorBook->AuthorID = $AuthorID;
-				$authorBook->saveInsert();
+		}
+		private function InsertImg($book, $img1, $img2, $img3){
+			var_dump($img1, $img2, $img3);
+			if($img1 != NULL){
+				$img = new Image_model();
+				$img->ISBN = $book->ISBN;
+				$img->urlimg = $book->ISBN.'.01.THUMBZZZ.jpg';
+				$file_name = 'Small_File';
+				$img->delete($img->urlimg);
+				$img->save();
+				self::upload($img->urlimg, $file_name);
 			}
 
-			// $img1 = $_POST['THUMBZZZ'];
-			// if($img1 != NULL){
-			// Image_model::insert($img, $ISBN);
-			// Image_model::upload();
-			// }
-			//
-			// $img2 = $_POST['MZZZZZZZ'];
-			// if($img2 != NULL){
-			// Image_model::insert($img3, $ISBN);
-			// Image_model::upload(??);
-			// }
-			//
-			// $img3 = $_POST['LZZZZZZZ'];
-			// if($img3 != NULL){
-			// Image_model::insert($img3, $ISBN);
-			// Image_model::upload(??);
-			// }
-			$book->saveInsert();
-			redirect(base_url('book'));
+			if($img2 != NULL){
+				$img = new Image_model();
+				$img->ISBN = $book->ISBN;
+				$img->urlimg = $book->ISBN.'.01.MZZZZZZZ.jpg';
+				$file_name = 'Medium_File';
+				$img->delete($img->urlimg);
+				$img->save();
+				self::upload($img->urlimg, $file_name);
+			}
+
+			if($img3 != NULL){
+				$img = new Image_model();
+				$img->ISBN = $book->ISBN;
+				$img->urlimg = $book->ISBN.'.01.LZZZZZZZ.jpg';
+				$name_fale = 'Large_File';
+				$img->delete($img->urlimg);
+				$img->save();
+				self::upload($img->urlimg, $file_name);
+				exit();
+			}
 		}
+
+private function upload($urlimg, $file_name){
+	var_dump('_________________________');
+		var_dump('$urlimg');
+		var_dump('$urlimg');
+	var_dump('_________________________');
+		$config['upload_path']   = './public/upload';
+    $config['allowed_types'] = 'gif|jpg|png';
+    $config['max_size']      = 100;
+    $config['max_width']     = 1024;
+    $config['max_height']    = 768;
+		$config['file_name']		 = $urlimg;
+		//$config['overwrite']     =  TRUE;
+    $this->load->library('upload', $config);
+
+		foreach ($_FILES as $file) {
+
+			if ( ! $this->upload->do_upload($file_name))
+			{
+							$error = array('error' => $this->upload->display_errors());
+							// $this->load->view('/', $error);
+			}
+			else
+			{
+							$data = array('upload_data' => $this->upload->data());
+			}
+		}
+	}
+
 }
+
 
 	// public function index()
 	// {
