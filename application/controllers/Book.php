@@ -185,9 +185,9 @@ class Book extends CI_Controller {
 				}
 			}
 
-			$img1 = $_POST['Small_File'];
-			$img2 = $_POST['Medium_File'];
-			$img3 = $_POST['Large_File'];
+			$img1 = $_FILES['Small_File'];
+			$img2 = $_FILES['Medium_File'];
+			$img3 = $_FILES['Large_File'];
 
 			self::InsertImg($book, $img1, $img2, $img3);
 
@@ -224,17 +224,15 @@ class Book extends CI_Controller {
 			$book->edition = $_POST['edition'];
 			$book->pages = $_POST['pages'];
 
-			$book->saveInsert();
-
-			$img1 = $_POST['Small_File'];
-			$img2 = $_POST['Medium_File'];
-			$img3 = $_POST['Large_File'];
-
-			
+			$img1 = $_FILES['Small_File'];
+			$img2 = $_FILES['Medium_File'];
+			$img3 = $_FILES['Large_File'];
 
 			self::InsertImg($book, $img1, $img2, $img3);
 			self::InsertAuthorsBook($book);
 			self::InsertCategoryBook($book);
+
+			$book->saveInsert();
 
 			redirect(base_url('book'));
 		}
@@ -262,8 +260,8 @@ class Book extends CI_Controller {
 
 		}
 		private function InsertImg($book, $img1, $img2, $img3){
-			var_dump($img1, $img2, $img3);
-			if($img1 != NULL){
+
+			if($img1['name'] != NULL){
 				$img = new Image_model();
 				$img->ISBN = $book->ISBN;
 				$img->urlimg = $book->ISBN.'.01.THUMBZZZ.jpg';
@@ -273,7 +271,7 @@ class Book extends CI_Controller {
 				self::upload($img->urlimg, $file_name);
 			}
 
-			if($img2 != NULL){
+			if($img2['name'] != NULL){
 				$img = new Image_model();
 				$img->ISBN = $book->ISBN;
 				$img->urlimg = $book->ISBN.'.01.MZZZZZZZ.jpg';
@@ -283,44 +281,59 @@ class Book extends CI_Controller {
 				self::upload($img->urlimg, $file_name);
 			}
 
-			if($img3 != NULL){
+			if($img3['name'] != NULL){
 				$img = new Image_model();
 				$img->ISBN = $book->ISBN;
 				$img->urlimg = $book->ISBN.'.01.LZZZZZZZ.jpg';
-				$name_fale = 'Large_File';
+				$file_name = 'Large_File';
 				$img->delete($img->urlimg);
 				$img->save();
 				self::upload($img->urlimg, $file_name);
+				}
 				exit();
-			}
+
 		}
 
 private function upload($urlimg, $file_name){
-	var_dump('_________________________');
-		var_dump('$urlimg');
-		var_dump('$urlimg');
-	var_dump('_________________________');
+	var_dump('ok');
+	// var_dump('_________________________');
+	// 	var_dump($urlimg);
+	// 	var_dump($file_name);
+	// var_dump('_________________________');
+
 		$config['upload_path']   = './public/upload';
-    $config['allowed_types'] = 'gif|jpg|png';
-    $config['max_size']      = 100;
+    $config	['allowed_types'] = 'gif|jpg|png';
+    $config['max_size']      = 500;
     $config['max_width']     = 1024;
-    $config['max_height']    = 768;
+    $config['max_height']    = 1068;
 		$config['file_name']		 = $urlimg;
 		//$config['overwrite']     =  TRUE;
     $this->load->library('upload', $config);
 
-		foreach ($_FILES as $file) {
+		// foreach ($_FILES as $file) {
 
 			if ( ! $this->upload->do_upload($file_name))
 			{
 							$error = array('error' => $this->upload->display_errors());
+							var_dump($error);
 							// $this->load->view('/', $error);
 			}
 			else
 			{
 							$data = array('upload_data' => $this->upload->data());
+							var_dump('_________________________');
+							var_dump('_________________________');
+							var_dump('_________________________');
+								var_dump($urlimg);
+							  var_dump($file_name);
+							var_dump('_________________________');
+							var_dump($data);
+							var_dump('_________________________');
+								// var_dump($urlimg);
+								// var_dump($file_name);
+							var_dump('_________________________');
 			}
-		}
+		// }
 	}
 
 }
