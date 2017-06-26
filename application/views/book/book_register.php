@@ -2,7 +2,7 @@
   <h2>Dados do livro</h2>
   <hr>
   <div class="row">
-    <form action="<?php echo base_url('book/saveInsert') ?>" method="post">
+    <form action="<?php echo base_url('book/saveInsert') ?>" method="post" enctype="multipart/form-data">
       <div class="col-md-12">
         <div class="col-md-8">
           <div class="form-group">
@@ -81,7 +81,7 @@
       <div class="col-md-12" style="margin-bottom:20px; padding:20px">
         <div class="col-md-4">
           <label for="nome">Imagem pequena</label>
-          <input type="file" class="form-control" id="file" name="Small_File" value="" placeholder="" style="height:50px;border:none">
+          <input type="file" class="form-control" id="file" name="Small_File" size='20' value="" placeholder="" style="height:50px;border:none">
         </div>
         <div class="col-md-4">
           <label for="nome">Imagem média</label>
@@ -89,7 +89,7 @@
         </div>
         <div class="col-md-4">
           <label for="nome">Imagem grande</label>
-          <input type="file" class="form-control" id="file" name="Big_File" value="" placeholder="" style="height:50px;border:none">
+          <input type="file" class="form-control" id="file" name="Large_File" value="" placeholder="" style="height:50px;border:none">
         </div>
       </div>
     </div>
@@ -157,18 +157,5 @@
         <button type="submit" class="btn btn-primary" style="float:right;background:#128f76;width:20%">Enviar  </button>
       </div>
     </div>
-
-    <?= form_open_multipart('upload/do_upload')?>
-      <?= form_upload('userfile')?>
-    <?= form_close()?>
-
-    <?= form_open_multipart('upload/do_upload')?>
-      <?= form_upload('userfile')?>
-    <?= form_close()?>
-
-    <?= form_open_multipart('upload/do_upload')?>
-      <?= form_upload('userfile')?>
-    <?= form_close()?>
-
   </form>
 </div>

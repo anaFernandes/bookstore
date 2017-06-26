@@ -2,7 +2,7 @@
   <h2>Dados do livro</h2>
   <hr>
   <div class="row">
-    <form action="<?php echo base_url('book/update/'.$book->ISBN) ?>" method="post">
+    <form action="<?php echo base_url('book/update/'.$book->ISBN) ?>" method="post" enctype="multipart/form-data">
       <div class="col-md-12">
         <div class="col-md-8">
           <div class="form-group">
@@ -79,6 +79,23 @@
     </div>
 
     <div class="row">
+      <div class="col-md-12" style="margin-bottom:20px; padding:20px">
+        <div class="col-md-4">
+          <label for="nome">Imagem pequena</label>
+          <input type="file" class="form-control" id="file" name="Small_File" size='20' value="" placeholder="" style="height:50px;border:none">
+        </div>
+        <div class="col-md-4">
+          <label for="nome">Imagem média</label>
+          <input type="file" class="form-control" id="file" name="Medium_File" value="" placeholder="" style="height:50px;border:none">
+        </div>
+        <div class="col-md-4">
+          <label for="nome">Imagem grande</label>
+          <input type="file" class="form-control" id="file" name="Large_File" value="" placeholder="" style="height:50px;border:none">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-12">
         <h1> Seleção de autores </h1>
         <hr>
@@ -109,9 +126,9 @@
 
     <div class="row">
       <div class="col-md-12">
-        <h1> Seleção de autores </h1>
+        <h1> Seleção de categorias </h1>
         <hr>
-        <?php if ($authors == FALSE): ?>
+        <?php if ($categories == FALSE): ?>
           <tr><td colspan="2">Nenhum autor encontrado</td></tr>
         <?php else: ?>
           <?php $category_number = 0;?>
