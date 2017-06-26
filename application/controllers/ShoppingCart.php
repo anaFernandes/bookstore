@@ -3,57 +3,55 @@ class ShoppingCart extends CI_Controller {
 
     public function index($info="") {
       $data['books'] = $this->get_cookies();
-      $data['books'] = $this->sort_interests($data['books']);
-      $data['final_price'] = $this->get_final_price($data['books']);
-      $this->build_static_info();
-      $data['error_label'] = $info;
-      if($data['books'] == NULL) {
-        $data['h1'] = "Carrinho de compras";
-  		 	$this->load->view('user/carrinho', $data);
-  			$this->build_static_footer();
-      } else {
-        $data['h1'] = "Carrinho de compras";
+      if(count($data['books'])) {
+        $data['books'] = $this->sort_interests($data['books']);
+        $data['final_price'] = $this->get_final_price($data['books']);
+        $this->build_static_info();
+        $data['error_label'] = $info;
+        $data['h1'] = "Seu carrinho";
         $this->load->view('user/carrinho', $data);
         $this->build_static_footer();
+      } else {
+        $data['h1'] = "Carrinho vazio =(";
+        $this->build_static_info();
+        $data['final_price'] = 0;
+  		 	$this->load->view('user/carrinho', $data);
+  			$this->build_static_footer();
       }
     }
 
-
-    // CRIAR LÓGICA PARA VERIFICAR SE O USUÁRIO EXISTE
-    // AQUI     | |
-    //         | |
-    //        | |
-    //       | |
-    //     \   /
-    //      \/
     public function user_exists($email) {
-
-      $data['fname'] = "ABCD";
-      $data['lname'] = "ABCD";
-      $data['email'] = $email;
-      $data['street'] = 'Coronel José de Castro';
-      $data['city'] = 'Cruzeiro';
-      $data['state'] = 'SP';
-      $data['zip'] = '12701-450';
-
-      return $data;
+      $customer = Customer_model::get_from_email($email);
+      return $customer;
     }
 
-    public function open_second_checkout ($data) {
+    public function open_second_checkout ($email) {
       $this->build_static_info();
-      $this->load->view('user/user_register');
+      $data['customer'] = $this->user_exists($email);
+      if($data['customer'] != NULL) {
+        $data['h1'] = 'Bem vindo de volta. Por favor, confirme seu endereço de entrega';
+      } else {
+        $data['h1'] = 'Bem vindo ao nosso site. Por favor, forneça um endereço para entrega';
+      }
+      $this->load->view('user/user_register', $data);
     }
 
     public function second_checkout() {
-
+      Customer::save($_POST['fname'],
+                     $_POST['$lname'],
+                     $_POST['$email'],
+                     $_POST['$street'],
+                     $_POST['$city'],
+                     $_POST['$state'],
+                     $_POST['$zip']
+      );
     }
 
     public function first_checkout() {
      if(isset($_POST['input_email'])) {
        $email = $_POST['input_email'];
        if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
-         $data = $this->user_exists($email);
-         $this->open_second_checkout($data);
+         $this->open_second_checkout($email);
        } else {
          $this->index("email inválido");
        }
@@ -166,7 +164,10 @@ class ShoppingCart extends CI_Controller {
     }
 
     public function verify_role() {
-			return 0;
+			if(isset($_SESSION['user']))
+				return 1;
+			else
+				return 0;
 		}
 
 }

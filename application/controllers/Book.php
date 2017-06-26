@@ -10,6 +10,7 @@ class Book extends CI_Controller {
 			} else {
 				$data['h1'] = "Produtos";
 			}
+			$data['page'] = 'index';
 			$this->build_static_info();
 			$data = $this->change_book_description($data);
 		 	$this->load->view('book/book_list', $data);
@@ -17,7 +18,6 @@ class Book extends CI_Controller {
 		}
 
 		public function show_book($ISBN) {
-
 			$data['book'] = book_model::get_from_id($ISBN);
 			$data['book_authors'] = AuthorBook_model::get_from_isbn($ISBN);
 			$data['book_categories'] = CategoryBook_model::get_from_isbn($ISBN);
@@ -59,7 +59,10 @@ class Book extends CI_Controller {
 		}
 
 		public function verify_role() {
-			return 0;
+			if(isset($_SESSION['user']))
+				return 1;
+			else
+				return 0;
 		}
 
 		public function build_static_info() {
@@ -84,6 +87,7 @@ class Book extends CI_Controller {
 			$data['books'] = [];
 			$data['user_type'] = $this->verify_role();
 			$data['h1'] = 'Livros da categoria : '.$category->CategoryName;
+			$data['page'] = 'busca';
 			if($data['books_from_categories']) {
 				foreach ($data['books_from_categories'] as $book) {
 					$book = Book_model::get_from_id($book->ISBN);
@@ -102,7 +106,7 @@ class Book extends CI_Controller {
 			$data['books'] = Book_model::search_all_columns($_POST['SearchString']);
 			$header_data['categories'] = category_model::get_all();
 			$header_url = 'layout/header';
-
+			$data['page'] = 'busca';
 			$this->change_book_description($data);
 
 			$this->load->view($header_url, $header_data);
@@ -230,7 +234,7 @@ class Book extends CI_Controller {
 			$img2 = $_POST['Medium_File'];
 			$img3 = $_POST['Large_File'];
 
-			
+
 
 			self::InsertImg($book, $img1, $img2, $img3);
 			self::InsertAuthorsBook($book);

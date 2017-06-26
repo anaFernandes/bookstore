@@ -1,6 +1,6 @@
         <div class="container">
           <div class="row">
-            <?php if($user_type != 1) : ?>
+            <?php if($user_type != 1 && $page == 'index') : ?>
               <div class="jumbotron" style="padding:90px">
                 <h2> Nossa da empresa </h2>
                 <hr>
@@ -57,7 +57,7 @@
                   <?php  $book_counter = 0 ?>
                 </div>
               <?php endif?>
-              <?php if($book === end($books)) : ?>
+              <?php if($book === end($books) && $page == 'index' && $user_type == 1 ) : ?>
                   <div class="col-md-3 box-shadow-add"  style="padding:20px; -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36);
                                                                -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36);
                                                                box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.36); background-color:#eee;

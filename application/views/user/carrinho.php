@@ -37,24 +37,20 @@
       <h2 style="padding:none; margin:0px">Confirmar compra</h2>
     </div>
   </div>
-
-  <div class="container" style="padding-top:20px">
-    <div class="row">
-      <form action="<?php echo base_url('ShoppingCart/first_checkout')?>" method="post">
-        <div class="col-md-6">
-          <input type="text" name="input_email" placeholder="email" style="min-width: 80%;">
-          <?php if(isset($error_label)) : ?>
-            <br>
-            <label style="color:red"> <?php echo $error_label ?> </label>
-          <?php endif ?>
-        </div>
-        <div class="col-md-6" style="text-align:right; padding-right:1%">
-          <button type="submit" class="btn btn-primary"> Comprar </a>
-        </div>
-      </form>
-    </div>
+</div>
+<div class="container" style="padding-top:20px">
+  <div class="row">
+    <form action="<?php echo base_url('ShoppingCart/first_checkout')?>" method="post">
+      <div class="col-md-6">
+        <input type="text" name="input_email" placeholder="email" style="min-width: 80%;">
+        <?php if(isset($error_label)) : ?>
+          <br>
+          <label style="color:red"> <?php echo $error_label ?> </label>
+        <?php endif ?>
+      </div>
+      <div class="col-md-6" style="text-align:right; padding-right:1%">
+        <button type="submit" class="btn btn-primary"> Comprar </a>
+      </div>
+    </form>
   </div>
-
-
-
 </div>
