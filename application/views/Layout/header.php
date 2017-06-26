@@ -30,12 +30,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a href="<?php echo base_url('book') ?>"class="navbar-brand" href="#">Brand</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav">
               <?php if(count($categories)): ?>
                 <?php foreach ($categories as $key => $category):?>
                   <li class="nav-item">
@@ -45,6 +45,19 @@
                   </li>
                 <?php endforeach ?>
               <?php endif ?>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="nav-item">
+                  <a href='<?php echo base_url('ShoppingCart/') ?>' class="nav-link">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href='<?php echo base_url('Admin/') ?>' class="nav-link">
+                    <span class="glyphicon glyphicon glyphicon-user"></span>
+                  </a>
+              </li>
+
             </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

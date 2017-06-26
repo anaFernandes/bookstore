@@ -19,7 +19,10 @@ class Category extends CI_Controller {
 		}
 
 		public function verify_role() {
-			return 1;
+			if(isset($_SESSION['user']))
+				return 1;
+			else
+				return 0;
 		}
 
 		public function build_static_info() {

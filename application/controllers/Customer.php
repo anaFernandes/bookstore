@@ -4,12 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Customer extends CI_Controller {
 
 	public function index() {
-		$data['custumers'] = $this->load_custumers();
+		$data['customers'] = $this->load_customers();
 		$header = $this->define_header();
 		$this->load->view($header);
-
 		if($this->define_access())
-			$this->load->view('custumer/custumer_list',$data);
+			$this->load->view('customer/customer_list',$data);
 		else
 			$this->load->view('layout/no-access');
 
@@ -20,7 +19,7 @@ class Customer extends CI_Controller {
 		$header = $this->define_header();
 		$this->load->view($header);
 		if($this->define_access())
-			$this->load->view('custumer/custumer_register');
+			$this->load->view('customer/customer_register');
 		else
 			$this->load->view('layout/no-access');
 		$this->load->view('layout/footer');
@@ -28,70 +27,80 @@ class Customer extends CI_Controller {
 
 
 	public function edit($id) {
-		$custumer = custumer_model::get_from_id($id);
-		$data['custumer'] = $custumer;
+		$customer = customer_model::get_from_id($id);
+		$data['customer'] = $customer;
 		$header = $this->define_header();
 		$this->load->view($header);
 		if($this->define_access())
-			$this->load->view('custumer/custumer_edit', $data);
+			$this->load->view('customer/customer_edit', $data);
 		else
 			$this->load->view('layout/no-access');
 		$this->load->view('layout/footer');
 	}
 
-	private function define_access() {
-		if($_SESSION['role'] == 2 )
-			return true;
-		return false;
+	public function verify_role() {
+		if(isset($_SESSION['user']))
+			return 1;
+		else
+			return 0;
 	}
 
-	private function define_header() {
-		$header_url = '';
-		if($_SESSION['role'] == 2) {
-			$header_url = 'layout/header-adm';
-		} else if($_SESSION['role'] == 1) {
-			$header_url = 'layout/header-tea';
+	public function build_static_info() {
+		$header_data['categories'] = category_model::get_all();
+		$header_data['active'] = 'books';
+		if($this->verify_role() == 1) {
+				$header_url = 'layout/admin-header';
+				$this->load->view($header_url, $header_data);
 		} else {
-			$header_url = 'layout/header-std';
+				$header_url = 'layout/header';
+				$this->load->view($header_url, $header_data);
 		}
-		return $header_url;
+	}
+
+	public function build_static_footer() {
+		$this->load->view('layout/footer');
 	}
 
 	public function update($id) {
-		$custumer = new custumer_model($id);
-		$custumer->fname = $_POST['fname'];
-		$custumer->lname = $_POST['lname'];
-		$custumer->email  = $_POST['email'];
-    $custumer->street = $_POST['street'];
-		$custumer->city = $_POST['city'];
-		$custumer->state  = $_POST['state'];
-    $custumer->zip = $_POST['zip'];
-		$custumer->save();
+
+		$customer = new customer_model($id);
+		$customer->fname = $_POST['fname'];
+		$customer->lname = $_POST['lname'];
+		$customer->email  = $_POST['email'];
+    $customer->street = $_POST['street'];
+		$customer->city = $_POST['city'];
+		$customer->state  = $_POST['state'];
+    $customer->zip = $_POST['zip'];
+
+		$customer->save();
+	}
 
 
 	public function del($id){
-		$custumer = new custumer_model($id);
-	  	$custumer->delete();
+		$customer = new customer_model($id);
+  	$customer->delete();
 
-		redirect(base_url('custumer'));
+		redirect(base_url('customer'));
 	}
 
 
-	private function load_custumers() {
-		return custumer_model::get_all();
+	private function load_customers() {
+		return customer_model::get_all();
 	}
 
-	public function save() {
-		$custumer = new custumer_model();
-		$custumer->fname = $_POST['fname'];
-		$custumer->lname = $_POST['lname'];
-		$custumer->email = $_POST['email'];
-    $custumer->street = $_POST['street'];
-		$custumer->city = $_POST['city'];
-		$custumer->state  = $_POST['state'];
-    $custumer->zip = $_POST['zip'];
-
-		$custumer->save();
-		redirect(base_url('custumer'));
+	public static function save() {
+		$customer = new customer_model();
+		$customer->fname = $_POST['fname'];
+		$customer->lname = $_POST['lname'];
+		$customer->email = $_POST['email'];
+    $customer->street = $_POST['street'];
+		$customer->city = $_POST['city'];
+		$customer->state  = $_POST['state'];
+    $customer->zip = $_POST['zip'];
+		$customer->save();
+		$this->build_static_info();
+		$this->load->view('obrigada');
+		$this->build_static_footer();
+		delete_cookie('shopping_cart');
 	}
 }
