@@ -1,64 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
-
-    <head>
-
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>E-commerce</title>
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-        <link rel="stylesheet" href="<?php echo base_url('public/bootstrap/css/bootstrap.css')?>">
-        <link rel="stylesheet" href="<?php echo base_url('public/font-awesome/css/font-awesome.min.css')?>">
-		    <link rel="stylesheet" href="<?php echo base_url('public/css/form-elements.css')?>">
-        <link rel="shortcut icon" href="assets/ico/favicon.png">
-        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
-        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href=<?php echo base_url("public/css/style.css");?>>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
     </head>
-
-    <body>
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a href="<?php echo base_url('book') ?>"class="navbar-brand" href="#">Brand</a>
+  <body>
+      <?php if($page == "exist"):?>
+        <?php $var = base_url('public/outras-imagens/DSC_0919.jpg');?>
+        <div class="container-fluid h-inherit; id=tall" style="background-image:url(<?php echo $var?>); background-size:auto; background-repeat:no-repeat;">
+          <?php else:?>
+          <div class="container-fluid h-inherit" style="background-color:#fff ">
+      <?php endif ?>
+      <div class="row d-lg-none"></div>
+      <div class="row align-items-first h-inherit">
+        <div class="col-3 pr-5 d-none d-lg-flex justify-content-end">
+          <div class="col-10" id="panelmenu" style="background-color:#fff; -webkit-box-shadow: 0px 0px 21px 0px rgba(0,0,0,0.4); -moz-box-shadow: 0px 0px 21px 0px rgba(0,0,0,0.4); box-shadow: 0px 0px 21px 0px rgba(0,0,0,0.4);">
+            <br><a href="<?php echo base_url('portifolio/index')?>"> <img src="<?php echo base_url('public/outras-imagens/logocarol.PNG');?>" alt="logo" height="auto" width="100%"> </a>
+            <div class="menu">
+                <form action="<?php echo base_url("portifolio/searchAll")?>" method="post">
+                    <div class="col-md-8 d-inline-block" style="padding-right: 0px!important; text-align:right">
+                      <div class="form-group">
+                        <input type="text" name="SearchString" class="form-control" placeholder="Seach">
+                      </div>
+                    </div>
+                    <div class="col-md-3 d-inline-block">
+                      <button type="submit" class="btn btn-primary btn-block" style="background:#2c3e50">Ok</button>
+                    </div>
+                  </form>
+              <ul class="p-0">
+                <img src="<?php echo base_url('public/outras-imagens/hr.PNG');?>" style="width:100%">
+                <br><br>
+                  <li><a href="<?php echo base_url('portifolio/image')?>"> Portifolio </a></li>
+                <li><a href="<?php echo base_url('video/index')?>" onclick="do_click();">Video</a></li>
+                <li><a href="#" onclick="do_click();"> Anothers Jobs</a></li>
+              </ul>
+              <br>
+              <ul class="p-0">
+                <li><a href="<?php echo base_url('aboutme')?>" onclick="do_click();">About me</a></li>
+                <li><a href="<?php echo base_url('businesspartners')?>" onclick="do_click();">Contact me</a></li>
+              </ul>
+              <br><img src="<?php echo base_url('public/outras-imagens/hr.PNG');?>" style="width:100%">
+              <br>
+              <br>
+                <a href="https://www.facebook.com/carolribasmakeup/" target="_blank"><img class="link" src="<?php echo base_url('public/outras-imagens/facebook.png');?>" alt="face" height="auto"></a>
+                <a href="https://www.instagram.com/carolribasmakeup/" target="_blank"><img class="link" src="<?php echo base_url('public/outras-imagens/instagram.jpg');?>" alt="insta" height="auto"></a>
+                <?php if($user_type == 0) : ?>
+                  <a href="<?php echo base_url('admin')?>"><img class="link" src="<?php echo base_url('public/outras-imagens/login.png');?>" alt="login" height="auto"></a>
+                <?php else : ?>
+                  <a href="<?php echo base_url('admin/logout')?>"><img class="link" src="<?php echo base_url('public/outras-imagens/login.png');?>" alt="login" height="auto"></a>
+                <?php endif ?>
+                <br><br>
+            </div>
           </div>
+        </div>
+      <div class='col-9 h-inherit'>
+       <div class="content h-inherit">
+          <!--
+          <a href="http://www.juniorqueiros.com/files/gimgs/16_dsc9330-editar-editar-editar.jpg" title="" class="image"  data-toggle="modal" data-target=".bd-example-modal-lg"><img src="http://www.juniorqueiros.com/files/gimgs/th-16_dsc9330-editar-editar-editar.jpg" alt="" height="133"></a>
+          -->
 
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <?php if(count($categories)): ?>
-                <?php foreach ($categories as $key => $category):?>
-                  <li class="nav-item">
-                      <a class="nav-link" href="<?php echo base_url("book/searchFromUrl/".$category->CategoryID)?>">
-                        <?php echo $category->CategoryName ?><span class="sr-only"></span>
-                      </a>
-                  </li>
-                <?php endforeach ?>
-              <?php endif ?>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item">
-                  <a href='<?php echo base_url('ShoppingCart/') ?>' class="nav-link">
-                    <span class="glyphicon glyphicon-shopping-cart"></span>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href='<?php echo base_url('Admin/') ?>' class="nav-link">
-                    <span class="glyphicon glyphicon glyphicon-user"></span>
-                  </a>
-              </li>
-
-            </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
+<script>
+  $(document).ready(function() {
+    var height = $('.content').getHeight();
+    $('.col-3').height(height);
+  })
+</script>
